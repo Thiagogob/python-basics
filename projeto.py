@@ -1,3 +1,5 @@
+##############################################    FUNÇÃO DE CADASTRO     ######################################################
+
 def cadastro(cadastros):
     while True:
         status = "em funcionamento"
@@ -9,40 +11,84 @@ def cadastro(cadastros):
         if flag == "n":
             break
 
-def consulta(cadastros):
+
+###########################################    FUNÇÃO DE CONSULTA     ####################################################
+
+def consulta(cadastros, filename):
     busca = input("Busca: ")
     encontrou = False
+
+    linha_escrita = []
 
     for codigo, info in cadastros.items():
         if busca in [codigo, info["nome"], info["status"]]:
             print(codigo, ":", [info["nome"], info["status"]])
+            linha_escrita.append(f"{codigo} : [{info['nome']} , {info['status']}]\n")
             encontrou = True
 
     if not encontrou:
-        print("Nenhum resultado encontrado.")
+        print("Nenhum resultado encontrado.\n")
+        linha_escrita.append("Nenhum resultado encontrado.\n")
+    
+    with open(filename, "a") as file:
+        file.write("".join(linha_escrita))
 
+#####################################    FUNÇÃO DE REPARO     ###################################################
+
+def reparo(cadastros, filename):
+    busca = input("Busca: ")
+    encontrou = False
+
+    linha_escrita = []
+
+    for codigo, info in cadastros.items():
+        if busca in [codigo, info["nome"], info["status"]]:
+            if info["status"]=="em funcionamento":
+                print("Deseja solicitar reparo para o item ",codigo, ":", [info["nome"], info["status"]], " (s/n)? ", end="")
+                reparo = input()
+                if reparo=="s":
+                    info["status"]="em reparo"
+                    print("Solicitação concluída para o item: ", codigo, ":", [info["nome"], info["status"]])
+                    linha_escrita.append(f"Solicitação concluída para o item: {codigo} : [{info['nome']} , {info['status']}]\n")
+                if reparo=="n":
+                    break
+            else:
+                print("Item: ", codigo, ":", [info["nome"], info["status"]], ", já está em reparo.")
+                linha_escrita.append(f"Item: {codigo} : [{info['nome']} , {info['status']}] já está em reparo.\n")
+            encontrou = True
+
+    if not encontrou:
+        print("Nenhum resultado encontrado.\n")
+        linha_escrita.append("Nenhum resultado encontrado.\n")
+    
+    with open(filename, "a") as file:
+        file.write("".join(linha_escrita))
+
+
+###############################    MAIN     #########################################################
 
 def main():
     cadastros = {}
-    print("Menu")
-    escolha = input("1- Cadastro\n2- Consulta\n3- Reparo\n4- Sair\nDigite uma opção: ")
+    filename = "resultados.txt"
+    
+    escolha = input("Menu:\n1- Cadastro\n2- Consulta\n3- Reparo\n4- Sair\nDigite uma opção: ")
     while(escolha!="4"):
 
         if(escolha=="1"):
             cadastro(cadastros)
 
         elif(escolha=="2"):
-            consulta(cadastros)
-            #consulta()
+            consulta(cadastros, filename)
 
         elif(escolha=="3"):
-            print("Reparo")
-            #reparo()
+            reparo(cadastros, filename)
 
         else:
-            print("Opção inválida")
+            print("Opção inválida!")
 
         escolha = input("1- Cadastro\n2- Consulta\n3- Reparo\n4- Sair\nDigite uma opção: ")
+
+#####################################################################################################################
 
 if __name__ == "__main__":
     main()
