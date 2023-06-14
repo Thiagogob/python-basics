@@ -5,10 +5,11 @@ def cadastro(cadastros):
         status = "em funcionamento"
         codigo = input("Código: ")
         nome = input("Nome: ")
+        nome = nome.lower()
         cadastros[codigo] = {"nome": nome, "status": status}
         print("Cadastro realizado!",codigo, ":", [cadastros[codigo]["nome"], cadastros[codigo]["status"]])
         flag = input("Deseja realizar novo cadastro (s/n)? ")
-        if flag == "n":
+        if flag == "n" or flag == "N":
             break
 
 
@@ -16,6 +17,7 @@ def cadastro(cadastros):
 
 def consulta(cadastros, filename):
     busca = input("Busca: ")
+    busca = busca.lower()
     encontrou = False
 
     linha_escrita = []
@@ -37,6 +39,7 @@ def consulta(cadastros, filename):
 
 def reparo(cadastros, filename):
     busca = input("Busca: ")
+    busca = busca.lower()
     encontrou = False
 
     linha_escrita = []
@@ -46,11 +49,11 @@ def reparo(cadastros, filename):
             if info["status"]=="em funcionamento":
                 print("Deseja solicitar reparo para o item ",codigo, ":", [info["nome"], info["status"]], " (s/n)? ", end="")
                 reparo = input()
-                if reparo=="s":
+                if reparo=="s" or reparo =="S":
                     info["status"]="em reparo"
                     print("Solicitação concluída para o item: ", codigo, ":", [info["nome"], info["status"]])
                     linha_escrita.append(f"Solicitação concluída para o item: {codigo} : [{info['nome']} , {info['status']}]\n")
-                if reparo=="n":
+                if reparo=="n" or reparo=="N":
                     break
             else:
                 print("Item: ", codigo, ":", [info["nome"], info["status"]], ", já está em reparo.")
@@ -65,7 +68,7 @@ def reparo(cadastros, filename):
         file.write("".join(linha_escrita))
 
 
-###############################    MAIN     #########################################################
+#######################################    MAIN     #########################################################
 
 def main():
     cadastros = {}
